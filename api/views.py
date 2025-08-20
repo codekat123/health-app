@@ -47,4 +47,4 @@ class GeminiChatAPIView(APIView):
              text = data['candidates'][0]['content']['parts'][0].get('text')
         except:
              pass
-        return Response({'text':text,'raw':data},status=status.HTTP_200_OK)     
+        return Response({'text':text},status=status.HTTP_200_OK)     
