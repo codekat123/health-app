@@ -60,7 +60,7 @@ def register(request,id=None):
           if serializer.is_valid():
                serializer.save()
                return Response({'message':'your data has been saved'},status=status.HTTP_200_OK)
-          return Response({'message':'something went wrong'},status=status.HTTP_400_BAD_REQUEST)
+          return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
      
      elif request.method in ['PUT','PATCH']:
           data = request.data
@@ -70,6 +70,18 @@ def register(request,id=None):
           if serializer.is_valid():
                serializer.save()
                return Response({'message':'your data has been saved'},status=status.HTTP_200_OK)
-          return Response({'message':'something went wrong'},status=status.HTTP_400_BAD_REQUEST)
+          return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
           
-     elif request.method == ''
+     elif request.method == 'GET':
+          if id:
+               user = get_object_or_404(Account,id=id)
+               serializer = ResgisterSerializer(user)
+          else:
+               user = Account.objects.all()
+               serializer = ResgisterSerializer(user,many=True)
+               return Response(serializer.data,status=status.HTTP_200_OK)
+     elif request.method == 'DELETE':
+          user = get_object_or_404(Account,id=id)
+          user.delete()
+
+          

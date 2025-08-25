@@ -9,7 +9,7 @@ class MyaccountManager(BaseUserManager):
                raise ValueError("user must have email address")
           if not user_name:
                raise ValueError("use must create username ")
-          email = normalize_email(email)
+          email = self.normalize_email(email)
           user = self.model(
                email = email,
                first_name = first_name,
