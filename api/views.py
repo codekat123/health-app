@@ -3,10 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 import json, requests
 from django.conf import settings
-
+from account.models import Account
+from .serializer import ResgisterSerializer
+from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
 
 class GeminiChatAPIView(APIView):
-     
 
      def post(self,request):
         # Optional simple token protection
@@ -48,3 +50,26 @@ class GeminiChatAPIView(APIView):
         except:
              pass
         return Response({'text':text},status=status.HTTP_200_OK)     
+     
+
+@api_view(['POST','GET','PUT','PATCH','DELETE'])
+def register(request,id=None):
+     
+     if request.method == 'POST':
+          serializer = ResgisterSerializer(data=request.data)
+          if serializer.is_valid():
+               serializer.save()
+               return Response({'message':'your data has been saved'},status=status.HTTP_200_OK)
+          return Response({'message':'something went wrong'},status=status.HTTP_400_BAD_REQUEST)
+     
+     elif request.method in ['PUT','PATCH']:
+          data = request.data
+          user = get_object_or_404(Account,id=id)
+          partial = request.method == 'PATCH'
+          serializer = ResgisterSerializer(user,data,partial=partial)
+          if serializer.is_valid():
+               serializer.save()
+               return Response({'message':'your data has been saved'},status=status.HTTP_200_OK)
+          return Response({'message':'something went wrong'},status=status.HTTP_400_BAD_REQUEST)
+          
+     elif request.method == ''
